@@ -1,11 +1,21 @@
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+import sys
+
+if len(sys.argv) > 2:
+    print("Error: Too many arguments were supplied; Expected maximum 1")
+    exit()
+
 
 clients = {}
 addresses = {}
+tags = {}
 commands = ["/users"]
 HOST = ''
-PORT = 33000
+if len(sys.argv) < 2:
+    PORT = 33000
+else:
+    PORT = int(sys.argv[1])
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
 SERVER = socket(AF_INET, SOCK_STREAM)
@@ -79,6 +89,7 @@ def process_command(client, msg):
 
 if __name__ == "__main__":
     SERVER.listen(5)  # Listens for a maximum of 5 connections
+    print(f"[Server Info] Starting server on port {PORT}")
     print("[Server Info] Waiting for incoming connections...")
     ACCEPT_THREAD = Thread(target=accept_incoming_connections)
     ACCEPT_THREAD.start()  # Starts the infinite loop
